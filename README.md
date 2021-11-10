@@ -7,5 +7,7 @@ Texas Instruments Si514 is user programmable to any frequency from `100kHz` to `
 ## Large Frequency Changes
 Large frequency changes are those that vary the **F**<sub>**VCO**</sub> frequency by an amount greater than `±1000 ppm` from an operating FCENTER. Figure 1 illustrates the difference between large and small frequency changes.
 
-
+<p align="center">
+  <img src='images/small-large-freq-change.JPG'>
+</p>
 
