@@ -10,7 +10,7 @@
   * [Resources](#resources)
 
 ## Introduction: <a name="introduction"></a>
-**Texas Instruments Si514** is user programmable to any frequency from `100kHz` to `250MHz`. The Si514 uses single crystal and DSPLL synthesizer to generate any frequency across this range using simple **I**<sup>**2**</sup>**C** commands.
+**Texas Instruments Si514** is user programmable to any frequency from `100kHz` to `250MHz`. The Si514 uses single crystal and DSPLL synthesizer to generate any frequency across this range using simple I<sup>2</sup>C commands.
 
 ## Connection layout: <a name="connection-layout"></a>
 The library is written for esp32 and the following pin configuration needs to be taken into account:
@@ -45,7 +45,10 @@ Large frequency changes are those that vary the **F**<sub>**VCO**</sub> frequenc
 
 Changing to the new frequency requires modificaton of the internal register map. Therefore, 9 out of 11 registers will be modified to achieve large frequency changes.
 
-### How Library is working:
+### How to use library:
+The library is written for esp32 but any other micrcontroller can be used with just a modification in the i2c function call in `si514.c` file.
+<br>
+<br>
 The `main.c` file contains minimum code example. The following `struct` needs to be changed to reset the oscillator to a new frequency settings. `FOUT` indicates the new output frequency. 
 ```
 static config_t config = {
@@ -55,11 +58,16 @@ static config_t config = {
     .FXO = 31.98,
 };
 ```
-This `struct` will be passed to the following function call 
+This `struct` will be passed to the following function call: 
 ```
 void si514_large_freq_xchange(config_t *config_si514, reg_t *reg);
 ```
-The above function call will calculate the new values to reset the si514 internal register map. The function then call the esp32 i2c hardware to communicate with the chip. 
+The above function call will calculate the new values to reset the si514 internal register map. The function then call the esp32 i2c hardware to communicate with the chip. The above function call will perform the following tasks:
+* Disable output of si514 by setting register 132 bit 2 to zero.
+* updating registers 0 with new LP1 and LP2 values. 
+* updating registers 5-9 with the new value of feedback divider. 
+* updating register 10, 11 with High and Low speed dividers.
+* Calibrating the VCO and enable the output of si514. 
 
 
 ## Resources <a name="resources"></a>
