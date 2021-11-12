@@ -43,10 +43,10 @@ Large frequency changes are those that vary the **F**<sub>**VCO**</sub> frequenc
   <img src='images/small-large-freq-change.JPG'>
 </p>
 
-Changing to the new frequency requires modificaton of the internal register map. 
+Changing to the new frequency requires modificaton of the internal register map. Therefore, 9 out of 11 registers will be modified to achieve large frequency changes.
 
 ### How Library is working:
-The `main.c` file contains minimum code example. The following `struct` needs to be changed to reset the oscillator to a new frequency settings. 
+The `main.c` file contains minimum code example. The following `struct` needs to be changed to reset the oscillator to a new frequency settings. `FOUT` indicates the new output frequency. 
 ```
 static config_t config = {
     .FVCO_min = 2080, 
@@ -55,6 +55,11 @@ static config_t config = {
     .FXO = 31.98,
 };
 ```
+This `struct` will be passed to the following function call 
+```
+void si514_large_freq_xchange(config_t *config_si514, reg_t *reg);
+```
+The above function call will calculate the new values to reset the si514 internal register map. The function then call the esp32 i2c hardware to communicate with the chip. 
 
 
 ## Resources <a name="resources"></a>
